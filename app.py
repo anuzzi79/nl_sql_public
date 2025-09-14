@@ -242,7 +242,7 @@ def _should_extend_budget(user_msg: str) -> bool:
 
 def agent_generator(user_msg: str, history, state: Dict[str, Any]) -> Generator[str, None, None]:
     """
-    Streaming 'type=messages' con UNA sola bolla che cresce.
+    Streaming con UNA sola bolla che cresce.
     Strategia:
     1) Prova autonoma nel primo round.
     2) Se nel 1° round non ha eseguito almeno una run_sql con successo → chiede aiuto all'utente (nella lingua dell'utente).
@@ -277,7 +277,6 @@ def agent_generator(user_msg: str, history, state: Dict[str, Any]) -> Generator[
         try:
             stream_resp = llm_chat(messages, stream=True)
         except RetryError as re:
-            # Messaggio neutro (non "OpenAI") per evitare confusione con DeepSeek
             yield f"❌ LLM retry fallito ({LLM_PROVIDER}): {re.last_attempt.exception()}"
             return
         except Exception as e:
@@ -707,11 +706,10 @@ with gr.Blocks(title="FG Data Agent", css=DARK_CSS, theme=gr.themes.Soft()) as d
         chat = gr.ChatInterface(
             fn=agent_generator,
             additional_inputs=[state],
-            multimodal=False,
             autofocus=True,
             submit_btn="Enviar",
             stop_btn="Parar",
-            type="messages",
+            fill_height=True,  # assicura che l'input resti in vista
         )
 
 if __name__ == "__main__":
