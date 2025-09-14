@@ -1,0 +1,7 @@
+gradio>=4.36.1,<5
+python-dotenv>=1.0.1
+tenacity>=8.2.3
+openai>=1.40.0
+sqlalchemy>=2.0.32
+pymysql>=1.1.1
+orjson>=3.10.7
